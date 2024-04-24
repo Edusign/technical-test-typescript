@@ -16,7 +16,6 @@ let upload = multer({
 });
 
 let app = express();
-let port = 3000;
 
 // Middleware
 app.use(express.json());
@@ -33,6 +32,7 @@ app.get("/course/:courseId/students", (req, res) => {
 		);
 	});
 });
+
 
 // Mark student as present for a specific course
 app.post("/student/:studentId/present", signatureUpload, (req, res) => {
@@ -79,8 +79,4 @@ function isMonochrome(): number {
 	return 1;
 }
 
-// Add more endpoints for other functionalities
-
-app.listen(port, () => {
-	console.log(`Server running on port ${port}`);
-});
+export default app;

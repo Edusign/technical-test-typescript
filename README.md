@@ -34,3 +34,6 @@ En cas d'erreur il faut renvoyer à l'utilisateur le détail de cette erreur.
 - Il faut que l'erreur ai toujours la même structure
 - Il faudra masquer les détails technique à l'utilisateur
 - Il faudra quand même logger ces détails technique coté serveur.
+
+Plusieurs tests ont été codés dans le fichier tests/signatureValidation.test.ts. 
+Il serait interessant de coder la nouvelle route en suivant les principes du TDD.

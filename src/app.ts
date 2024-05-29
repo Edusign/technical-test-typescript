@@ -1,16 +1,18 @@
 import express from "express";
 import multer from "multer";
-import mysql from "mysql2/promise";
 import fs from "fs";
+import Database from "better-sqlite3";
+import path from "path";
 
-let dbConfig = {
-	host: "localhost",
-	user: "technical_test",
-	password: "technical_test",
-	database: "technical_test",
-	port: 3306,
-};
-
+const databasePath = path.resolve(__dirname + '/database.db');
+if (!fs.existsSync(databasePath)) {
+	const db = new Database(databasePath, { verbose: console.log });
+	const migrationSchema = fs.readFileSync(path.resolve(__dirname, '../../', 'mysql-init-scripts/technical_test-schema.sql'), 'utf8');
+	const migrationData = fs.readFileSync(path.resolve(__dirname, '../../', 'mysql-init-scripts/technical_test-data.sql'), 'utf8');
+	db.exec(migrationSchema);
+	db.exec(migrationData);
+}
+  
 let upload = multer({
 	limits: {fileSize: 1024 * 1024 * 2},
 });
@@ -24,13 +26,9 @@ app.use(express.json());
 app.get("/course/:courseId/students", (req, res) => {
 	let cid = req.params.courseId;
 
-	mysql.createConnection(dbConfig).then((conn) => {
-		conn.execute("SELECT * FROM STUDENTS JOIN STUDENT_STATES ON STUDENTS.ID = STUDENT_STATES.STUDENT_ID WHERE COURSE_ID = " + cid).then(
-			(rows) => {
-				res.json(rows);
-			}
-		);
-	});
+	const db = new Database(databasePath, { verbose: console.log });
+	const rows = db.prepare("SELECT * FROM STUDENTS JOIN STUDENT_STATES ON STUDENTS.ID = STUDENT_STATES.STUDENT_ID WHERE COURSE_ID = " + cid).all();
+	res.json(rows);
 });
 
 
@@ -40,13 +38,12 @@ app.post("/student/:studentId/present", signatureUpload, (req, res) => {
 	let path = (req as any).signaturePath;
 	let t = new Date().toISOString().slice(0, 19).replace("T", " ");
 
-	mysql.createConnection(dbConfig).then((conn) => {
-		conn.execute(
-			"UPDATE STUDENT_STATES SET STATE = 1, TIMESTAMP = " + `'${t}'` + ", SIGNATURE = " + `'${path}'` + " WHERE STUDENT_ID = " + sid
-		).then(() => {
-			res.json({message: "Student marked as present"});
-		});
-	});
+	const db = new Database(databasePath, { verbose: console.log });
+	const stmt = db.prepare(
+		"UPDATE STUDENT_STATES SET STATE = 1, TIMESTAMP = " + `'${t}'` + ", SIGNATURE = " + `'${path}'` + " WHERE STUDENT_ID = " + sid
+	);
+	stmt.run();
+	res.json({message: "Student marked as present"});
 });
 
 // Get student state for a specific course
@@ -54,11 +51,9 @@ app.post("/state", (req, res) => {
 	let sid = req.body.studentId;
 	let cid = req.body.courseId;
 
-	mysql.createConnection(dbConfig).then((conn) => {
-		conn.execute("SELECT * FROM STUDENT_STATES WHERE STUDENT_ID = " + sid + " AND COURSE_ID = " + cid).then(([row]) => {
-			res.json(row);
-		});
-	});
+	const db = new Database(databasePath, { verbose: console.log });
+	const [row] = db.prepare("SELECT * FROM STUDENT_STATES WHERE STUDENT_ID = " + sid + " AND COURSE_ID = " + cid).all()
+	res.json(row);
 });
 
 function signatureUpload(req, res, next) {

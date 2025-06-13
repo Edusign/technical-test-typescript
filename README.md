@@ -1,39 +1,125 @@
-# Edusign Tech Assessment
+# Test Technique Edusign
 
-## Context :
+## 👋 Bienvenue
 
-Ce projet est un test technique centré sur la gestion de l'assiduité dans les feuilles de présence.
-Il vise à développer la logique back-end en utilisant Node.js et Express.js pour gérer les opérations liées aux participants et aux feuilles de présence.
+Vous allez travailler sur une application de validation de signatures utilisée par des établissements d'enseignement. Cette application traite un grand volume de données et doit garantir sécurité et performance.
 
----
-
-## Code review
-
-Il s'agit d'un tout nouveau projet que l'un des membres de votre équipe vient de livrer.
-Nous devons le mettre en production et vous êtes en charge de la revue de code.
-
-Pendant ce test, n'hésitez pas à commenter, critiquer, suggérer des modifications par l'exemple.
-Ce qui est acceptable dans ce code, ce qui ne l'est pas à vos yeux.
-
-Considérez que si ce projet est mis en production, il aura un impact sur plus de 1.000.000 d'utilisateurs.
-
-Info: une base de données MySQL est utilisée pour stocker les données. vous pouvez la lancer en utilisant docker-compose.
+**Contexte métier** : L'application gère les signatures étudiantes pour validation d'assiduité. Elle doit traiter plusieurs milliers de signatures par jour avec des contraintes de performance strictes.
 
 ---
 
-## Amélioration
+## 🛠 Installation et démarrage
 
-Lorsqu'un étudiant est marqué comme présent sur une feuille de présence, il doit fournir sa signature.
+### Prérequis
+- Node.js 18+
+- Docker et Docker Compose
 
-Il est donc nécessaire :
-- de vérifier que la signature est bien présente.
-- de vérifier que la signature est bien une image.
-- de vérifier que la signature est bien une image monochrome.
+### Setup
+```bash
+# Installation des dépendances
+npm install
 
-En cas d'erreur il faut renvoyer à l'utilisateur le détail de cette erreur.
-- Il faut que l'erreur ai toujours la même structure
-- Il faudra masquer les détails technique à l'utilisateur
-- Il faudra quand même logger ces détails technique coté serveur.
+# Démarrage de la base de données
+docker-compose up -d
 
-Plusieurs tests ont été codés dans le fichier tests/signatureValidation.test.ts. 
-Il serait interessant de coder la nouvelle route en suivant les principes du TDD.
+# Lancement des tests
+npm test
+
+# Développement
+npm run dev
+```
+
+---
+
+## 📋 Exercices (60 minutes)
+
+### 🔍 Exercice 1 : Code Review & Architecture (20min)
+
+Le fichier `src/app.ts` contient une API qui va être mise en production pour gérer des milliers d'utilisateurs.
+
+**Votre mission** :
+- **Analysez le code** et identifiez les problèmes critiques
+- **Priorisez les corrections** par impact business
+- **Proposez une architecture** plus robuste et sécurisée
+- **Justifiez vos choix** techniques
+
+**Points d'attention** :
+- Sécurité des données
+- Performance et scalabilité
+- Gestion d'erreurs
+- Architecture du code
+
+### ⚡ Exercice 2 : Optimisation d'algorithmes (25min)
+
+Le fichier `src/algorithms/signature-detector.ts` contient des algorithmes de traitement de signatures avec des problèmes de performance.
+
+**Votre mission** :
+- **Analysez la complexité** des algorithmes actuels
+- **Identifiez les goulots d'étranglement** de performance
+- **Optimisez les fonctions** pour gérer 10,000+ signatures
+- **Mesurez l'amélioration** obtenue
+
+**Contraintes techniques** :
+- Temps de réponse < 500ms pour 1000 signatures
+- Consommation mémoire maîtrisée
+- Maintien de la précision des résultats
+
+### 🤖 Exercice 3 : Développement avec IA (15min)
+
+Utilisez l'IA pour implémenter une fonctionnalité de détection de signatures générées artificiellement.
+
+**Votre mission** :
+- **Analysez la fonction** `detectAIGeneratedSignature` dans `signature-detector.ts`
+- **Utilisez l'IA** (ChatGPT, Claude, etc.) pour l'implémenter
+- **Testez votre solution** avec les cas de test fournis
+- **Documentez votre processus** d'utilisation de l'IA
+
+**Évaluation** :
+- Qualité du prompt initial
+- Critique et amélioration des réponses IA
+- Validation et tests de la solution
+
+---
+
+## 🎯 Livrables attendus
+
+Pour chaque exercice :
+
+1. **Code source** commenté et fonctionnel
+2. **Explication** de votre démarche et des problèmes identifiés
+3. **Justification** de vos choix techniques
+4. **Mesures de performance** (exercice 2)
+5. **Documentation** de votre utilisation de l'IA (exercice 3)
+
+---
+
+## 💡 Conseils
+
+- **Concentrez-vous sur la logique** : nous évaluons votre raisonnement
+- **Priorisez les impacts critiques** : sécurité > performance > maintenabilité
+- **Documentez votre approche** : expliquez le "pourquoi" de vos décisions
+- **Utilisez l'IA intelligemment** : comme un outil d'aide, pas une solution miracle
+- **Posez des questions** si les besoins ne sont pas clairs
+
+---
+
+## ⏰ Gestion du temps (60 minutes)
+
+- **Exercice 1** : 20 minutes - Focus sur les problèmes critiques
+- **Exercice 2** : 25 minutes - Optimisation mesurable
+- **Exercice 3** : 15 minutes - Implémentation guidée par IA
+
+Si vous manquez de temps, **documentez votre approche** et les étapes suivantes.
+
+**L'objectif est d'évaluer votre raisonnement technique et votre efficacité.**
+
+---
+
+## 🤝 Support
+
+N'hésitez pas à demander :
+- Clarifications sur les besoins fonctionnels
+- Aide technique pour l'environnement
+- Précisions sur les attentes
+
+**Bonne chance ! 🚀**

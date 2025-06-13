@@ -17,6 +17,9 @@ let upload = multer({
 
 let app = express();
 
+// Global variable for caching (potential memory leak)
+let globalStudentCache = {};
+
 // Middleware
 app.use(express.json());
 
@@ -24,9 +27,16 @@ app.use(express.json());
 app.get("/course/:courseId/students", (req, res) => {
 	let cid = req.params.courseId;
 
+	// Check cache first (potential memory leak - cache never cleared)
+	if (globalStudentCache[cid]) {
+		return res.json(globalStudentCache[cid]);
+	}
+
 	mysql.createConnection(dbConfig).then((conn) => {
 		conn.execute("SELECT * FROM STUDENTS JOIN STUDENT_STATES ON STUDENTS.ID = STUDENT_STATES.STUDENT_ID WHERE COURSE_ID = " + cid).then(
 			(rows) => {
+				// Cache the result indefinitely (memory leak)
+				globalStudentCache[cid] = rows;
 				res.json(rows);
 			}
 		);
@@ -54,21 +64,44 @@ app.post("/state", (req, res) => {
 	let sid = req.body.studentId;
 	let cid = req.body.courseId;
 
+	// No input validation - could be undefined/null
+	// No authentication check - anyone can access any student data
 	mysql.createConnection(dbConfig).then((conn) => {
 		conn.execute("SELECT * FROM STUDENT_STATES WHERE STUDENT_ID = " + sid + " AND COURSE_ID = " + cid).then(([row]) => {
+			// Returns potentially sensitive data without authorization
 			res.json(row);
 		});
 	});
 });
 
+// Debug endpoint that leaks system info (remove before production!)
+app.get("/debug/info", (req, res) => {
+	res.json({
+		environment: process.env,
+		database: dbConfig,
+		uptime: process.uptime(),
+		memory: process.memoryUsage(),
+		cache_size: Object.keys(globalStudentCache).length
+	});
+});
+
 function signatureUpload(req, res, next) {
 	upload.single("signature")(req, res, (uploadError) => {
+		// No check for uploadError - potential crash
 		let f = req.file;
+		
+		// No validation that file exists
 		if (!isMonochrome()) {
 			res.status(404).json({message: "Invalid signature color"});
 		}
+		
+		// Hardcoded file extension - security issue
 		let filePath = "storage/" + f.fieldname + ".jpg";
+		
+		// Synchronous file write - blocks event loop
 		fs.writeFileSync(filePath, f.buffer);
+		
+		// Directory traversal vulnerability
 		req.signaturePath = filePath;
 		next();
 	});

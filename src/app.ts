@@ -17,7 +17,6 @@ let upload = multer({
 
 let app = express();
 
-// Global variable for caching (potential memory leak)
 let globalStudentCache = {};
 
 // Middleware
@@ -27,7 +26,6 @@ app.use(express.json());
 app.get("/course/:courseId/students", (req, res) => {
 	let cid = req.params.courseId;
 
-	// Check cache first (potential memory leak - cache never cleared)
 	if (globalStudentCache[cid]) {
 		return res.json(globalStudentCache[cid]);
 	}

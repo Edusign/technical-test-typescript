@@ -33,7 +33,7 @@ app.get("/course/:courseId/students", (req, res) => {
 	mysql.createConnection(dbConfig).then((conn) => {
 		conn.execute("SELECT * FROM STUDENTS JOIN STUDENT_STATES ON STUDENTS.ID = STUDENT_STATES.STUDENT_ID WHERE COURSE_ID = " + cid).then(
 			(rows) => {
-				// Cache the result indefinitely (memory leak)
+				// Cache the result indefinitely 
 				globalStudentCache[cid] = rows;
 				res.json(rows);
 			}

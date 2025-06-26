@@ -1,15 +1,15 @@
 /**
- * EXERCICE PERFORMANCE ALGORITHMIQUE
+ * ALGORITHMIC PERFORMANCE EXERCISE
  * 
- * Ce fichier contient des algorithmes de détection et validation de signatures
- * qui doivent être optimisés pour gérer un grand volume de données.
+ * This file contains signature detection and validation algorithms
+ * that need to be optimized to handle large volumes of data.
  * 
- * OBJECTIF: Optimiser ces fonctions pour traiter efficacement des milliers de signatures
- * CONTRAINTES: Performance acceptable + consommation mémoire maîtrisée
+ * OBJECTIVE: Optimize these functions to efficiently process thousands of signatures
+ * CONSTRAINTS: Acceptable performance + controlled memory consumption
  */
 
 /**
- * Interface représentant une signature numérique
+ * Interface representing a digital signature
  */
 interface Signature {
     id: number;
@@ -21,7 +21,7 @@ interface Signature {
 }
 
 /**
- * Interface pour le résultat de détection de doublons
+ * Interface for duplicate detection result
  */
 interface DuplicateResult {
     original: number;
@@ -30,7 +30,7 @@ interface DuplicateResult {
 }
 
 /**
- * Interface pour le résultat de validation
+ * Interface for validation result
  */
 interface ValidationResult {
     isValid: boolean;
@@ -39,16 +39,16 @@ interface ValidationResult {
 }
 
 /**
- * Détection de signatures dupliquées
+ * Duplicate signature detection
  * 
- * Cette fonction détecte les signatures identiques ou très similaires.
- * Actuellement utilisée pour éviter la fraude (même signature utilisée plusieurs fois).
+ * This function detects identical or very similar signatures.
+ * Currently used to prevent fraud (same signature used multiple times).
  */
 function findDuplicateSignatures(signatures: Signature[]): DuplicateResult[] {
     console.time('findDuplicates');
     const duplicates: DuplicateResult[] = [];
     
-    // Implémentation actuelle
+    // Current implementation
     for (let i = 0; i < signatures.length; i++) {
         for (let j = i + 1; j < signatures.length; j++) {
             const similarity = compareSignatures(signatures[i], signatures[j]);
@@ -67,10 +67,10 @@ function findDuplicateSignatures(signatures: Signature[]): DuplicateResult[] {
 }
 
 /**
- * Validation avec cache
+ * Validation with cache
  * 
- * Cette fonction valide les signatures en utilisant un cache pour éviter
- * de refaire les mêmes calculs coûteux.
+ * This function validates signatures using a cache to avoid
+ * redoing the same expensive calculations.
  */
 const signatureCache = new Map<string, ValidationResult>();
 
@@ -81,7 +81,7 @@ function validateSignatureWithCache(signature: Signature): ValidationResult {
         return signatureCache.get(key)!;
     }
     
-    // Validation coûteuse (simule un algorithme ML complexe)
+    // Expensive validation (simulates a complex ML algorithm)
     const isValid = expensiveValidation(signature);
     const result: ValidationResult = {
         isValid,
@@ -94,15 +94,15 @@ function validateSignatureWithCache(signature: Signature): ValidationResult {
 }
 
 /**
- * Recherche de signatures suspectes
+ * Search for suspicious signatures
  * 
- * Cette fonction trouve toutes les signatures ayant un score de suspicion
- * supérieur à un seuil donné. Les signatures sont pré-triées par score.
+ * This function finds all signatures with a suspicion score
+ * above a given threshold. Signatures are pre-sorted by score.
  */
 function findSuspiciousSignatures(signatures: Signature[], threshold: number = 0.8): Signature[] {
     const suspicious: Signature[] = [];
     
-    // Recherche dans la liste triée
+    // Search in the sorted list
     for (const signature of signatures) {
         if (signature.suspicionScore >= threshold) {
             suspicious.push(signature);
@@ -113,10 +113,10 @@ function findSuspiciousSignatures(signatures: Signature[], threshold: number = 0
 }
 
 /**
- * Comparaison de signatures
+ * Signature comparison
  * 
- * Compare deux signatures en analysant leurs caractéristiques.
- * Retourne un score de similarité entre 0 et 1.
+ * Compares two signatures by analyzing their characteristics.
+ * Returns a similarity score between 0 and 1.
  */
 function compareSignatures(sig1: Signature, sig2: Signature): number {
     if (!sig1.pixels || !sig2.pixels) return 0;
@@ -124,7 +124,7 @@ function compareSignatures(sig1: Signature, sig2: Signature): number {
     let matches = 0;
     const total = sig1.pixels.length;
     
-    // Comparaison détaillée
+    // Detailed comparison
     for (let i = 0; i < total; i++) {
         if (sig1.pixels[i] === sig2.pixels[i]) {
             matches++;
@@ -135,23 +135,23 @@ function compareSignatures(sig1: Signature, sig2: Signature): number {
 }
 
 /**
- * Nouvelle fonction à implémenter : Détection de signatures générées par IA
+ * New function to implement: AI-generated signature detection
  * 
- * TODO: Implémenter une fonction qui détecte si une signature a été générée
- * artifiellement par une IA plutôt que dessinée par un humain.
+ * TODO: Implement a function that detects if a signature was generated
+ * artificially by AI rather than drawn by a human.
  * 
- * Indices : 
- * - Les signatures humaines ont des imperfections naturelles
- * - Les signatures IA ont souvent des patterns répétitifs
- * - Analyser la régularité du trait, la pression, etc.
+ * Hints: 
+ * - Human signatures have natural imperfections
+ * - AI signatures often have repetitive patterns
+ * - Analyze stroke regularity, pressure, etc.
  */
 function detectAIGeneratedSignature(signature: Signature): boolean {
-    // TODO: À implémenter
+    // TODO: To implement
     return false;
 }
 
 /**
- * Interface pour les options de génération de signatures de test
+ * Interface for test signature generation options
  */
 interface GenerationOptions {
     includeTimestamp?: boolean;
@@ -161,7 +161,7 @@ interface GenerationOptions {
 }
 
 /**
- * FONCTIONS UTILITAIRES (NE PAS MODIFIER)
+ * UTILITY FUNCTIONS (DO NOT MODIFY)
  */
 
 /**

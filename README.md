@@ -1,125 +1,73 @@
-# Test Technique Edusign
+# Edusign Technical Assessment
 
-## 👋 Bienvenue
+## About this session
 
-Vous allez travailler sur une application de validation de signatures utilisée par des établissements d'enseignement. Cette application traite un grand volume de données et doit garantir sécurité et performance.
+This is a **pair-programming session**, not a solo exam. You'll work through a real codebase with your interviewer, who will play different roles — colleague, product manager, pair partner — depending on the exercise.
 
-**Contexte métier** : L'application gère les signatures étudiantes pour validation d'assiduité. Elle doit traiter plusieurs milliers de signatures par jour avec des contraintes de performance strictes.
+There are no trick questions. We care about **how you think, communicate, and collaborate** — not just whether you produce correct code.
+
+### What we're building
+
+Edusign helps educational institutions manage student attendance. Teachers open attendance sessions, students check in digitally, and the system tracks who's present, late, or absent.
+
+Today you'll be reviewing a feature that was built with AI assistance, and then implementing something together.
 
 ---
 
-## 🛠 Installation et démarrage
+## Setup
 
-### Prérequis
+### Prerequisites
+
 - Node.js 18+
-- Docker et Docker Compose
 
-### Setup
+That's it — SQLite is embedded, no external database server needed.
+
+### Getting started
+
 ```bash
-# Installation des dépendances
 npm install
-
-# Démarrage de la base de données
-docker-compose up -d
-
-# Lancement des tests
 npm test
-
-# Développement
-npm run dev
 ```
 
----
-
-## 📋 Exercices (60 minutes)
-
-### 🔍 Exercice 1 : Code Review & Architecture (20min)
-
-Le fichier `src/app.ts` contient une API qui va être mise en production pour gérer des milliers d'utilisateurs.
-
-**Votre mission** :
-- **Analysez le code** et identifiez les problèmes critiques
-- **Priorisez les corrections** par impact business
-- **Proposez une architecture** plus robuste et sécurisée
-- **Justifiez vos choix** techniques
-
-**Points d'attention** :
-- Sécurité des données
-- Performance et scalabilité
-- Gestion d'erreurs
-- Architecture du code
-
-### ⚡ Exercice 2 : Optimisation d'algorithmes (25min)
-
-Le fichier `src/algorithms/signature-detector.ts` contient des algorithmes de traitement de signatures avec des problèmes de performance.
-
-**Votre mission** :
-- **Analysez la complexité** des algorithmes actuels
-- **Identifiez les goulots d'étranglement** de performance
-- **Optimisez les fonctions** pour gérer 10,000+ signatures
-- **Mesurez l'amélioration** obtenue
-
-**Contraintes techniques** :
-- Temps de réponse < 500ms pour 1000 signatures
-- Consommation mémoire maîtrisée
-- Maintien de la précision des résultats
-
-### 🤖 Exercice 3 : Développement avec IA (15min)
-
-Utilisez l'IA pour implémenter une fonctionnalité de détection de signatures générées artificiellement.
-
-**Votre mission** :
-- **Analysez la fonction** `detectAIGeneratedSignature` dans `signature-detector.ts`
-- **Utilisez l'IA** (ChatGPT, Claude, etc.) pour l'implémenter
-- **Testez votre solution** avec les cas de test fournis
-- **Documentez votre processus** d'utilisation de l'IA
-
-**Évaluation** :
-- Qualité du prompt initial
-- Critique et amélioration des réponses IA
-- Validation et tests de la solution
+Tests will fail — that's expected. Part of the session involves making some of them pass.
 
 ---
 
-## 🎯 Livrables attendus
+## Session structure
 
-Pour chaque exercice :
+### Part 1 — Code Review (~35 min, no AI tools)
 
-1. **Code source** commenté et fonctionnel
-2. **Explication** de votre démarche et des problèmes identifiés
-3. **Justification** de vos choix techniques
-4. **Mesures de performance** (exercice 2)
-5. **Documentation** de votre utilisation de l'IA (exercice 3)
+You'll review an attendance check-in feature that was built with AI, comparing the code against the product spec in `REQUIREMENTS.md`. The code is spread across several files — types, configuration, business logic, routes, data access, and notifications. This is about reading code, tracing logic across files, spotting issues, and discussing trade-offs with your interviewer.
 
----
+### Part 2 — Implementation (~33 min, AI tools encouraged)
 
-## 💡 Conseils
-
-- **Concentrez-vous sur la logique** : nous évaluons votre raisonnement
-- **Priorisez les impacts critiques** : sécurité > performance > maintenabilité
-- **Documentez votre approche** : expliquez le "pourquoi" de vos décisions
-- **Utilisez l'IA intelligemment** : comme un outil d'aide, pas une solution miracle
-- **Posez des questions** si les besoins ne sont pas clairs
+You'll implement a feature and fix a bug, using whatever AI tools you normally work with. Your interviewer will pair-program with you.
 
 ---
 
-## ⏰ Gestion du temps (60 minutes)
+## Key files
 
-- **Exercice 1** : 20 minutes - Focus sur les problèmes critiques
-- **Exercice 2** : 25 minutes - Optimisation mesurable
-- **Exercice 3** : 15 minutes - Implémentation guidée par IA
-
-Si vous manquez de temps, **documentez votre approche** et les étapes suivantes.
-
-**L'objectif est d'évaluer votre raisonnement technique et votre efficacité.**
+| File | Description |
+|---|---|
+| `REQUIREMENTS.md` | Product spec for the attendance feature — **read this first** |
+| `src/types.ts` | Shared TypeScript interfaces (Session, CheckIn, AttendanceRecord, etc.) |
+| `src/config.ts` | Application configuration (thresholds, webhook URL) |
+| `src/db/database.ts` | Database setup (Knex + SQLite schema) |
+| `src/db/store.ts` | Data access layer (queries, CRUD operations) |
+| `src/attendance/service.ts` | Business logic (check-in processing, status calculation, overrides) |
+| `src/attendance/routes.ts` | Express route handlers |
+| `src/notifications.ts` | Notification utilities (Slack webhook, logging) |
+| `src/app.ts` | Express app setup |
+| `src/signature-validator.ts` | Signature validation utilities |
+| `tests/attendance-close.test.ts` | Tests for the endpoint you'll implement |
 
 ---
 
-## 🤝 Support
+## What we expect from you
 
-N'hésitez pas à demander :
-- Clarifications sur les besoins fonctionnels
-- Aide technique pour l'environnement
-- Précisions sur les attentes
+- **Think out loud.** Share your reasoning as you go.
+- **Ask questions.** If something is unclear, ask — just like you would with a real colleague.
+- **Push back.** If you disagree with a suggestion, say so and explain why.
+- **Be pragmatic.** Perfect is the enemy of shipped.
 
-**Bonne chance ! 🚀**
+Good luck — and have fun with it.
